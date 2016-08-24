@@ -2,6 +2,7 @@
 
 juke.factory('StatsFactory', function ($q) {
   var statsObj = {};
+
   statsObj.totalTime = function (album) {
     var audio = document.createElement('audio');
     return $q(function (resolve, reject) {
@@ -18,5 +19,23 @@ juke.factory('StatsFactory', function ($q) {
       resolveOrRecur();
     });
   };
+
   return statsObj;
 });
+
+
+juke.factory('AlbumFetchingFactory', function($q, $http){
+  var fetchingObj = {};
+
+  fetchingObj.fetchAll = function(){
+  return $http.get('/api/albums/')
+  .then(function (res) { return res.data; })
+}
+
+fetchingObj.fetchById = function(id){
+  return $http.get('/api/albums/' + id)
+}
+
+
+  return fetchingObj;
+})

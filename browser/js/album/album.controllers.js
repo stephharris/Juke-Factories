@@ -1,13 +1,14 @@
 /* global juke */
 'use strict';
 
-juke.controller('AlbumCtrl', function ($scope, $http, $rootScope, $log, StatsFactory) {
+juke.controller('AlbumCtrl', function ($scope, $http, $rootScope, $log, StatsFactory, AlbumFetchingFactory) {
 
   // load our initial data
-  $http.get('/api/albums/')
-  .then(function (res) { return res.data; })
+  // $http.get('/api/albums/')
+  // .then(function (res) { return res.data; })
+  AlbumFetchingFactory.fetchAll()
   .then(function (albums) {
-    return $http.get('/api/albums/' + albums[0].id); // temp: get one
+    return AlbumFetchingFactory.fetchById(albums[0].id); // temp: get one
   })
   .then(function (res) { return res.data; })
   .then(function (album) {
@@ -20,7 +21,8 @@ juke.controller('AlbumCtrl', function ($scope, $http, $rootScope, $log, StatsFac
     $scope.album = album;
     StatsFactory.totalTime(album)
     .then(function (albumDuration) {
-      $scope.fullDuration = albumDuration;
+      $scope.album.fullDuration = albumDuration;
+     // $scope.$evalAsync()
     });
 
   })
